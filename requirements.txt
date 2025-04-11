@@ -1,0 +1,5 @@
+dlib
+cv2
+numpy
+face_recognition 
+os
