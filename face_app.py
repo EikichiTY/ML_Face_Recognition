@@ -1,42 +1,84 @@
-import cv2 
-import face_recognition
-import numpy as np 
+import cv2
 import os
+import tkinter as tk
+from tkinter import messagebox
+from PIL import Image, ImageTk
 
-label = input("Enter the label (ex: yacine): ")
+class FaceCaptureApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Face Capture App")
 
-# Create main path to save 
-base_dir = "faces_dataset"
-save_dir = os.path.join(base_dir, label)
+        # Label input
+        tk.Label(root, text="Enter Label:").pack()
+        self.label_entry = tk.Entry(root)
+        self.label_entry.pack()
 
-# Create the folder if not existing
-os.makedirs(save_dir, exist_ok=True)
+        # Start button
+        self.start_button = tk.Button(root, text="Start Camera", command=self.start_camera)
+        self.start_button.pack()
 
-cam = cv2.VideoCapture(0)
-cv2.namedWindow("Face Recognition App")
+        # Image counter
+        self.counter_label = tk.Label(root, text="Images Captured: 0")
+        self.counter_label.pack()
 
-img_counter = 0
-while True: 
-    ret,frame =  cam.read()     
-    if not ret: 
-        print("Failed to grab frame")
-        break
-    cv2.imshow("test",frame)
+        # Video frame
+        self.video_label = tk.Label(root)
+        self.video_label.pack()
 
-    #HOTKEYS 
-    k = cv2.waitKey(1) 
-    #escape key
-    if k%256 == 27:                     
-        print("Escape hit, closing the app")
-        break
-    #space key
-    elif k%256 ==32: 
-        img_name = f"{label}_{img_counter}.png"
-        img_path = os.path.join(save_dir, img_name)
-        cv2.imwrite(img_name,frame)
-        print("Screenshot taken")
-        img_counter+=1 
+        # Capture button
+        self.capture_button = tk.Button(root, text="Capture", command=self.capture_image, state=tk.DISABLED)
+        self.capture_button.pack()
 
-cam.release()
-cv2.destroyAllWindows()
+        # Exit button
+        self.exit_button = tk.Button(root, text="Exit", command=self.quit_app)
+        self.exit_button.pack()
 
+        self.cap = None
+        self.frame = None
+        self.img_counter = 0
+        self.save_dir = ""
+
+    def start_camera(self):
+        label = self.label_entry.get().strip()
+        if not label:
+            messagebox.showwarning("Input Error", "Please enter a label name")
+            return
+
+        base_dir = "faces_dataset"
+        self.save_dir = os.path.join(base_dir, label)
+        os.makedirs(self.save_dir, exist_ok=True)
+        self.cap = cv2.VideoCapture(0)
+        self.capture_button.config(state=tk.NORMAL)
+        self.update_frame()
+
+    def update_frame(self):
+        if self.cap:
+            ret, frame = self.cap.read()
+            if ret:
+                self.frame = frame
+                cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                img = Image.fromarray(cv2image)
+                imgtk = ImageTk.PhotoImage(image=img)
+                self.video_label.imgtk = imgtk
+                self.video_label.configure(image=imgtk)
+        self.root.after(10, self.update_frame)
+
+    def capture_image(self):
+        if self.frame is not None:
+            img_name = f"{os.path.basename(self.save_dir)}_{self.img_counter}.png"
+            img_path = os.path.join(self.save_dir, img_name)
+            cv2.imwrite(img_path, self.frame)
+            self.img_counter += 1
+            self.counter_label.config(text=f"Images Captured: {self.img_counter}")
+            print("Image saved:", img_path)
+
+    def quit_app(self):
+        if self.cap:
+            self.cap.release()
+        self.root.destroy()
+
+# Run the GUI
+root = tk.Tk()
+app = FaceCaptureApp(root)
+root.mainloop()
