@@ -4,31 +4,45 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 
-class FaceCaptureApp:
+class NewDataApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Face Capture App")
+        self.root.geometry("650x700+500+50")
+
+        # Charger l'image
+        image = Image.open("app_images/background_wh.png") 
+        image = image.resize((650, 700))  
+        self.bg = ImageTk.PhotoImage(image) 
+
+        bg_label = tk.Label(root, image=self.bg)  
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+ 
+
+        #Page Title
+        label = tk.Label(root, text="New Data", font=("Arial", 24, "bold"), bg= "white")
+        label.pack(pady=10)
 
         # Label input
-        tk.Label(root, text="Enter Label:").pack()
+        tk.Label(root, text="Enter Label:", font=("Arial", 16, "bold"), bg= "white").pack()
         self.label_entry = tk.Entry(root)
         self.label_entry.pack()
 
         # Start button
-        self.start_button = tk.Button(root, text="Start Camera", command=self.start_camera)
-        self.start_button.pack()
+        self.start_button = tk.Button(root, text="Start Camera", width= 20, height= 1, command=self.start_camera)
+        self.start_button.pack(padx= 10, pady= 5)
 
         # Image counter
-        self.counter_label = tk.Label(root, text="Images Captured: 0")
-        self.counter_label.pack()
+        self.counter_label = tk.Label(root, text="Images Captured: 0", font=("Arial", 11, "italic"), bg= "white")
+        self.counter_label.pack(padx= 10, pady= 5)
 
         # Video frame
         self.video_label = tk.Label(root)
-        self.video_label.pack()
+        self.video_label.pack(padx= 10, pady= 5)
 
         # Capture button
         self.capture_button = tk.Button(root, text="Capture", command=self.capture_image, state=tk.DISABLED)
-        self.capture_button.pack()
+        self.capture_button.pack(padx= 10, pady= 5)
 
         # Exit button
         self.exit_button = tk.Button(root, text="Exit", command=self.quit_app)
@@ -50,9 +64,10 @@ class FaceCaptureApp:
         os.makedirs(self.save_dir, exist_ok=True)
         self.cap = cv2.VideoCapture(0)
         self.capture_button.config(state=tk.NORMAL)
+        self.start_button.config(state=tk.DISABLED)
         self.update_frame()
 
-    def update_frame(self):
+    def update_frame(self): 
         if self.cap:
             ret, frame = self.cap.read()
             if ret:
@@ -80,5 +95,5 @@ class FaceCaptureApp:
 
 # Run the GUI
 root = tk.Tk()
-app = FaceCaptureApp(root)
+app = NewDataApp(root)
 root.mainloop()
