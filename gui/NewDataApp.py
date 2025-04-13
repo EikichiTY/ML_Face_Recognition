@@ -93,7 +93,7 @@ class NewDataApp:
         if self.cap:
             self.cap.release()
         self.root.destroy()
-        from MainMenuApp import MainMenuApp
+        from gui.MainMenuApp import MainMenuApp
         new_root = tk.Tk()
         MainMenuApp(new_root)
         new_root.mainloop()

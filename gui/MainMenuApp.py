@@ -32,7 +32,7 @@ class MainMenuApp:
 
     def open_manage_data(self):
         self.root.destroy()
-        from NewDataApp import NewDataApp
+        from gui.NewDataApp import NewDataApp
         new_root = tk.Tk()
         NewDataApp(new_root)
         new_root.mainloop()
@@ -42,9 +42,5 @@ class MainMenuApp:
         new_root = tk.Tk()
         TestApp(new_root)
         new_root.mainloop()
-"""
+    """
 
-# Run the GUI
-root = tk.Tk()
-app = MainMenuApp(root)
-root.mainloop()
