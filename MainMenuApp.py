@@ -1,0 +1,50 @@
+import tkinter as tk
+from PIL import Image, ImageTk
+#from TestApp import TestApp  # You'll need to implement this class
+
+class MainMenuApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Main Menu")
+        self.root.geometry("700x400+500+100")
+        self.root.resizable(False, False)
+
+        # Charger l'image
+        image = Image.open("app_images/background_main.jpg") 
+        image = image.resize((700, 400))  
+        self.bg = ImageTk.PhotoImage(image) 
+
+        bg_label = tk.Label(root, image=self.bg)  
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+        # Title
+        title = tk.Label(root, text=" Facial Recognition Menu ", font=("Arial", 20, "bold"))
+        title.pack(pady=40)
+
+        # Test Recognition button
+        test_btn = tk.Button(root, text="Test Recognition", font=("Arial", 14), width=20) #, command=self.open_test)
+        test_btn.place(x= 100, y = 320 )
+
+        # Manage Data button
+        manage_btn = tk.Button(root, text="Manage Data", font=("Arial", 14), width=20, command=self.open_manage_data)
+        manage_btn.place(x= 400, y= 320)
+
+
+    def open_manage_data(self):
+        self.root.destroy()
+        from NewDataApp import NewDataApp
+        new_root = tk.Tk()
+        NewDataApp(new_root)
+        new_root.mainloop()
+
+    """def open_test(self):
+        self.root.destroy()
+        new_root = tk.Tk()
+        TestApp(new_root)
+        new_root.mainloop()
+"""
+
+# Run the GUI
+root = tk.Tk()
+app = MainMenuApp(root)
+root.mainloop()

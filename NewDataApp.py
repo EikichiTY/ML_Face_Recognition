@@ -8,11 +8,12 @@ class NewDataApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Face Capture App")
-        self.root.geometry("650x700+500+50")
+        self.root.geometry("700x600+500+100")
+        self.root.resizable(False, False)
 
         # Charger l'image
-        image = Image.open("app_images/background_wh.png") 
-        image = image.resize((650, 700))  
+        image = Image.open("app_images/background.png") 
+        image = image.resize((700, 600))  
         self.bg = ImageTk.PhotoImage(image) 
 
         bg_label = tk.Label(root, image=self.bg)  
@@ -20,20 +21,20 @@ class NewDataApp:
  
 
         #Page Title
-        label = tk.Label(root, text="New Data", font=("Arial", 24, "bold"), bg= "white")
+        label = tk.Label(root, text="New Data", font=("Arial", 24, "bold"), bd = 2, relief="solid", bg= "white")
         label.pack(pady=10)
 
         # Label input
-        tk.Label(root, text="Enter Label:", font=("Arial", 16, "bold"), bg= "white").pack()
-        self.label_entry = tk.Entry(root)
-        self.label_entry.pack()
+        tk.Label(root, text=" Enter Label: ", font=("Arial", 14, "bold"), bd = 1, relief="solid", bg= "white").pack()
+        self.label_entry = tk.Entry(root, width=30)
+        self.label_entry.pack(pady=10, padx=5)
 
         # Start button
-        self.start_button = tk.Button(root, text="Start Camera", width= 20, height= 1, command=self.start_camera)
+        self.start_button = tk.Button(root, text=" Start Camera ", width= 20, height= 1, command=self.start_camera)
         self.start_button.pack(padx= 10, pady= 5)
 
         # Image counter
-        self.counter_label = tk.Label(root, text="Images Captured: 0", font=("Arial", 11, "italic"), bg= "white")
+        self.counter_label = tk.Label(root, text=" Images Captured: 0 ", font=("Arial", 11, "italic"), bd = 1, relief="solid", bg= "white")
         self.counter_label.pack(padx= 10, pady= 5)
 
         # Video frame
@@ -73,7 +74,7 @@ class NewDataApp:
             if ret:
                 self.frame = frame
                 cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                img = Image.fromarray(cv2image)
+                img = Image.fromarray(cv2image).resize((400, 300))
                 imgtk = ImageTk.PhotoImage(image=img)
                 self.video_label.imgtk = imgtk
                 self.video_label.configure(image=imgtk)
@@ -85,15 +86,16 @@ class NewDataApp:
             img_path = os.path.join(self.save_dir, img_name)
             cv2.imwrite(img_path, self.frame)
             self.img_counter += 1
-            self.counter_label.config(text=f"Images Captured: {self.img_counter}")
-            print("Image saved:", img_path)
+            self.counter_label.config(text=f" Images Captured: {self.img_counter}")
+            print(" Image saved:", img_path)
 
     def quit_app(self):
         if self.cap:
             self.cap.release()
         self.root.destroy()
+        from MainMenuApp import MainMenuApp
+        new_root = tk.Tk()
+        MainMenuApp(new_root)
+        new_root.mainloop()
 
-# Run the GUI
-root = tk.Tk()
-app = NewDataApp(root)
-root.mainloop()
+
