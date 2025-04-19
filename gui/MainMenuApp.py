@@ -37,10 +37,9 @@ class MainMenuApp:
         ManageDataApp(new_root)
         new_root.mainloop()
 
-    """def open_test(self):
+    def open_test(self):
         self.root.destroy()
+        from gui.FaceRecognizerApp import FaceRecognizerApp
         new_root = tk.Tk()
-        TestApp(new_root)
+        FaceRecognizerApp(new_root)
         new_root.mainloop()
-    """
-

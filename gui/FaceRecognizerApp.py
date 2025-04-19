@@ -4,17 +4,19 @@ import face_recognition
 import cv2
 import tkinter as tk
 from PIL import Image, ImageTk
+from core.FaceTrainer import FaceTrainer
 
 
 class FaceRecognizerApp:
     def __init__(self, encoding_dir="encodings"):
+        FaceTrainer(root).train_all()
         self.encoding_dir = encoding_dir
         self.known_encodings = {}
         self.load_encodings()
 
         self.window = tk.Tk()
         self.window.title("Live Face Recognition")
-        self.window.geometry("800x600")
+        self.window.geometry("700x600+500+100")
         self.window.resizable(False, False)
 
         self.video_label = tk.Label(self.window)
@@ -71,3 +73,10 @@ class FaceRecognizerApp:
     def on_close(self):
         self.cap.release()
         self.window.destroy()
+
+
+# Test
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = FaceRecognizerApp(root)
+    root.mainloop()
