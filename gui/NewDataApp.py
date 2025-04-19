@@ -30,24 +30,24 @@ class NewDataApp:
         self.label_entry.pack(pady=10, padx=5)
 
         # Start button
-        self.start_button = tk.Button(root, text=" Start Camera ", width= 20, height= 1, command=self.start_camera)
+        self.start_button = tk.Button(root, text=" Start Camera ", font=("Arial", 10,), width= 20, height= 1, command=self.start_camera)
         self.start_button.pack(padx= 10, pady= 5)
 
         # Image counter
         self.counter_label = tk.Label(root, text=" Images Captured: 0 ", font=("Arial", 11, "italic"), bd = 1, relief="solid", bg= "white")
-        self.counter_label.pack(padx= 10, pady= 5)
+        self.counter_label.pack(padx= 10, pady= 10)
 
         # Video frame
         self.video_label = tk.Label(root)
         self.video_label.pack(padx= 10, pady= 5)
 
         # Capture button
-        self.capture_button = tk.Button(root, text="Capture", command=self.capture_image, state=tk.DISABLED)
-        self.capture_button.pack(padx= 10, pady= 5)
+        self.capture_button = tk.Button(root, text="Capture", font=("Arial", 10,),command=self.capture_image, state=tk.DISABLED)
+        self.capture_button.pack(padx= 10, pady= 10)
 
         # Exit button
-        self.exit_button = tk.Button(root, text="Exit", command=self.quit_app)
-        self.exit_button.pack()
+        self.exit_button = tk.Button(root, text="Back", font=("Arial", 10), command=self.open_manage_data)
+        self.exit_button.pack(pady = 5)
 
         self.cap = None
         self.frame = None
@@ -89,13 +89,12 @@ class NewDataApp:
             self.counter_label.config(text=f" Images Captured: {self.img_counter}")
             print(" Image saved:", img_path)
 
-    def quit_app(self):
+    def open_manage_data(self):
         if self.cap:
             self.cap.release()
         self.root.destroy()
-        from gui.MainMenuApp import MainMenuApp
+        from gui.ManageDataApp import ManageDataApp
         new_root = tk.Tk()
-        MainMenuApp(new_root)
+        ManageDataApp(new_root)
         new_root.mainloop()
-
 
