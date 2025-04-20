@@ -14,6 +14,14 @@ class FaceRecognizerApp:
         self.root.geometry("800x600+500+100")
         self.root.resizable(False, False)
 
+
+        image = Image.open("app_images/background.png") 
+        image = image.resize((800, 600))  
+        self.bg = ImageTk.PhotoImage(image) 
+
+        bg_label = tk.Label(root, image=self.bg)  
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+
         self.encodings_dir = encodings_dir
         self.tolerance = tolerance
         self.known_encodings = []
@@ -24,7 +32,7 @@ class FaceRecognizerApp:
         self.label_video = tk.Label(root)
         self.label_video.pack()
 
-        self.quit_button = tk.Button(root, text="Exit", command=self.quit_app, font=("Arial", 14), bg="red", fg="white")
+        self.quit_button = tk.Button(root, text="Exit",width=15, command=self.quit_app, font=("Arial", 14))
         self.quit_button.pack(pady=10)
 
         self.load_mean_encodings()

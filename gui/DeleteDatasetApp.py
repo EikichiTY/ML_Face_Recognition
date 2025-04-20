@@ -22,10 +22,10 @@ class DeleteDatasetApp:
 
         #Add datasets for actions
         self.dataset_path = dataset_path
-        self.protected_folders = {"Messi", "Tony Stark"}
+        self.protected_folders = {"Lionel Messi", "Tony Stark"}
 
         tk.Label(root, text="Select a dataset to delete:", font=("Arial", 14)).pack(pady=10)
-        tk.Label(root, text="! Messi and Tony Stark are default datasets they cannot be deleted !", font=("Arial", 11,"italic")).pack(pady=10)
+        tk.Label(root, text="! Lionel Messi and Tony Stark are default test datasets they cannot be deleted !", font=("Arial", 11,"italic")).pack(pady=10)
 
         # Scrollbar + Listbox
         scrollbar = Scrollbar(root)
