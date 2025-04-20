@@ -1,8 +1,5 @@
+face_recognition
 dlib
-cv2
+opencv-python
 numpy
-face_recognition 
-os
-tkinter
-shutil 
-PIL
+Pillow
