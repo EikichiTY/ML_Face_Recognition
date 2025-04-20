@@ -7,6 +7,20 @@ This project uses the face_recognition library to recognize faces in real time u
 
 ## Features 
 
+- **Face Registration**  
+  Users can take pictures of themselves directly through the interface. These images are saved in organized folders within the `faces_dataset` directory, each folder corresponding to a different identity.
+
+- **Dataset Management**  
+  Users can delete any dataset folder they created (except protected ones) via a dedicated GUI page.
+
+- **Model Training & Testing**  
+  When testing is triggered:
+  - All stored face images are used to compute face encodings.
+  - The average encoding per identity is saved as `.npy` files.
+  - The webcam is then activated for **live testing**, comparing faces in real time with the known dataset.
+
+---
+
 ## Technologies Used 
 - Python 3.x
 - `face_recognition`
