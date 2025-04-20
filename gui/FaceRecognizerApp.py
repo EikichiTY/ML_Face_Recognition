@@ -24,11 +24,11 @@ class FaceRecognizerApp:
         self.label_video = tk.Label(root)
         self.label_video.pack()
 
-        self.quit_button = tk.Button(root, text="Quitter", command=self.quit_app, font=("Arial", 14), bg="red", fg="white")
+        self.quit_button = tk.Button(root, text="Exit", command=self.quit_app, font=("Arial", 14), bg="red", fg="white")
         self.quit_button.pack(pady=10)
 
         self.load_mean_encodings()
-
+    
     def load_mean_encodings(self):
         print("Loading mean encodings from:", self.encodings_dir)
         for file in os.listdir(self.encodings_dir):
@@ -103,11 +103,14 @@ class FaceRecognizerApp:
         self.update_frame()
 
     def quit_app(self):
-        print("Quitting...")
         self.running = False
         if self.video:
             self.video.release()
         self.root.destroy()
+        from gui.MainMenuApp import MainMenuApp
+        new_root = tk.Tk()
+        MainMenuApp(new_root)
+        new_root.mainloop()
 
 
 if __name__ == "__main__":
