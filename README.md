@@ -19,7 +19,6 @@ This project uses the face_recognition library to recognize faces in real time u
   - The average encoding per identity is saved as `.npy` files.
   - The webcam is then activated for **live testing**, comparing faces in real time with the known dataset.
 
----
 
 ## Technologies Used 
 - Python 3.x
