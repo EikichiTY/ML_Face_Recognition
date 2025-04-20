@@ -24,12 +24,19 @@ This project uses the face_recognition library to recognize faces in real time u
 ## Project Structure
 .
 ├── faces_dataset/           # Contains user photo folders (one per person)
+
 ├── encodings/               # Stores mean encoding .npy files
+
 ├── app_images/              # Backgrounds and assets for GUI
+
 ├── gui/                     # GUI-related modules (MainMenuApp, FaceRecognizerApp, ManageDataApp, etc.)
+
 ├── core/                    # Core logic (FaceTrainer, utils)
+
 ├── main.py                  # Entry point
+
 ├── requirements.txt
+
 └── README.md
 
 ## Technologies Used 
