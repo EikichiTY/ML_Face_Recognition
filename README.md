@@ -34,7 +34,7 @@ When testing, the system activates the webcam and compares faces captured live t
 - `Tkinter` (standard GUI library)
 
 ## How to run 
-1. Install dependencies: 
+1. Install dependencies: (make sure you have cmake installed)
    ```bash
    pip install -r requirements.txt
 
