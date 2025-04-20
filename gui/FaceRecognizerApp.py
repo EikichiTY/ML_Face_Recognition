@@ -1,82 +1,116 @@
-import os
-import numpy as np
-import face_recognition
 import cv2
+import numpy as np
+import os
+import face_recognition
 import tkinter as tk
 from PIL import Image, ImageTk
-from core.FaceTrainer import FaceTrainer
+from threading import Thread
 
 
 class FaceRecognizerApp:
-    def __init__(self, encoding_dir="encodings"):
-        FaceTrainer(root).train_all()
-        self.encoding_dir = encoding_dir
-        self.known_encodings = {}
-        self.load_encodings()
+    def __init__(self, root, encodings_dir='encodings', tolerance=0.4):
+        self.root = root
+        self.encodings_dir = encodings_dir
+        self.tolerance = tolerance
+        self.known_encodings = []
+        self.known_labels = []
+        self.video = None
+        self.running = False
 
-        self.window = tk.Tk()
-        self.window.title("Live Face Recognition")
-        self.window.geometry("700x600+500+100")
-        self.window.resizable(False, False)
+        self.label_video = tk.Label(root)
+        self.label_video.pack()
 
-        self.video_label = tk.Label(self.window)
-        self.video_label.pack()
+        self.quit_button = tk.Button(root, text="Quitter", command=self.quit_app, font=("Arial", 14), bg="red", fg="white")
+        self.quit_button.pack(pady=10)
 
-        self.cap = cv2.VideoCapture(0)
-        self.update_frame()
+        self.load_mean_encodings()
 
-        self.window.protocol("WM_DELETE_WINDOW", self.on_close)
-        self.window.mainloop()
+    def load_mean_encodings(self):
+        print("Loading mean encodings from:", self.encodings_dir)
+        for file in os.listdir(self.encodings_dir):
+            if file.endswith('_mean.npy'):
+                label = file.replace('_mean.npy', '')
+                path = os.path.join(self.encodings_dir, file)
+                encoding = np.load(path)
 
-    def load_encodings(self):
-        for filename in os.listdir(self.encoding_dir):
-            if filename.endswith("_mean.npy"):
-                label = filename.replace("_mean.npy", "")
-                path = os.path.join(self.encoding_dir, filename)
-                self.known_encodings[label] = np.load(path)
-        print(f"Loaded encodings for: {list(self.known_encodings.keys())}")
+                self.known_encodings.append(encoding)
+                self.known_labels.append(label)
+        print("Loaded labels:", self.known_labels)
 
     def recognize_faces(self, frame):
-        rgb_frame = frame[:, :, ::-1]
-        face_locations = face_recognition.face_locations(rgb_frame)
-        face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
+        if not self.known_encodings:
+            return frame
 
-        for (top, right, bottom, left), encoding in zip(face_locations, face_encodings):
-            label = "Unknown"
-            color = (0, 0, 255)
-            for name, known_encoding in self.known_encodings.items():
-                match = face_recognition.compare_faces([known_encoding], encoding)[0]
-                distance = face_recognition.face_distance([known_encoding], encoding)[0]
-                if match:
-                    label = f"{name} ({distance:.2f})"
-                    color = (0, 255, 0)
-                    break
+        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        rgb_small_frame = small_frame[:, :, ::-1].copy()
 
-            cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
-            cv2.putText(frame, label, (left, top - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
+        face_locations = face_recognition.face_locations(rgb_small_frame)
+        if not face_locations or not isinstance(face_locations[0], tuple):
+            return frame
+
+        try:
+            face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
+        except TypeError:
+            return frame
+
+        if not face_encodings:
+            return frame
+
+        for face_encoding, face_location in zip(face_encodings, face_locations):
+            distances = face_recognition.face_distance(self.known_encodings, face_encoding)
+            best_match_index = np.argmin(distances)
+
+            if distances[best_match_index] <= self.tolerance:
+                name = self.known_labels[best_match_index]
+            else:
+                name = "Unknown person"
+
+            top, right, bottom, left = face_location
+            top *= 4
+            right *= 4
+            bottom *= 4
+            left *= 4
+
+            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+            cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
         return frame
 
     def update_frame(self):
-        ret, frame = self.cap.read()
+        if not self.running:
+            return
+        ret, frame = self.video.read()
         if ret:
             frame = self.recognize_faces(frame)
-            frame = cv2.resize(frame, (800, 600))
-            img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            img = Image.fromarray(img)
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            img = Image.fromarray(frame)
             imgtk = ImageTk.PhotoImage(image=img)
-            self.video_label.imgtk = imgtk
-            self.video_label.configure(image=imgtk)
-        self.window.after(10, self.update_frame)
+            self.label_video.imgtk = imgtk
+            self.label_video.configure(image=imgtk)
+        self.root.after(10, self.update_frame)
 
-    def on_close(self):
-        self.cap.release()
-        self.window.destroy()
+    def start_recognition(self):
+        print("Starting webcam...")
+        self.video = cv2.VideoCapture(0)
+        if not self.video.isOpened():
+            print("Error: Webcam not accessible.")
+            return
+        self.running = True
+        self.update_frame()
+
+    def quit_app(self):
+        print("Quitting...")
+        self.running = False
+        if self.video:
+            self.video.release()
+        self.root.destroy()
 
 
-# Test
 if __name__ == "__main__":
     root = tk.Tk()
+    root.title("Face Recognition App")
+    root.geometry("800x600")
     app = FaceRecognizerApp(root)
+    Thread(target=app.start_recognition).start()
     root.mainloop()
+

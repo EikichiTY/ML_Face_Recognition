@@ -57,3 +57,7 @@ class FaceTrainer:
 
     def load_all_encodings(self, label):
         return np.load(os.path.join(self.save_dir, f"{label}_encodings.npy"), allow_pickle=True)
+
+# Test
+if __name__ == "__main__":
+    FaceTrainer().train_all()

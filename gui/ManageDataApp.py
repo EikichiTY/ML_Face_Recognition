@@ -1,6 +1,5 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-#from TestApp import TestApp  # You'll need to implement this class
 
 class ManageDataApp:
     def __init__(self, root):
@@ -54,4 +53,3 @@ class ManageDataApp:
         new_root = tk.Tk()
         MainMenuApp(new_root)
         new_root.mainloop()
-    
