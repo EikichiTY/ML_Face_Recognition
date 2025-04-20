@@ -2,9 +2,11 @@
 
 ## Description 
 
-The objective of this project is to develop a facial recognition model using neural networks (supervised learning) in Python. The model used is a Convolutional Neural Network (CNN). It used with a webcam implementation to identify whether image contains the face of a specific person. Real-time face detection and classification are performed using a webcam to showcase the model's ability to differentiate the target person from others. All known faces are stored in folders inside the faces_dataset folder. The name of the folder provides the label.
+This project is a facial recognition application built in Python using a Convolutional Neural Network (CNN). It relies on the face_recognition library to detect and recognize faces in real time through a webcam.
 
-This project uses the face_recognition library to recognize faces in real time using a webcam. During training, face encodings (128-value vectors) are extracted from images in faces_dataset/ and saved as .npy files. These files store both individual encodings and their average (_mean.npy) for each person. Later, during testing, the system loads these .npy files to identify faces live from the webcam by comparing the live encoding to the saved ones.
+Users can register themselves by taking photos directly from the interface. These images are saved in folders under the faces_dataset directory, with each folder representing a different person. During training, the app creates a 128-dimensional face encoding for each image and stores the results as .npy files. It also calculates the average encoding for each person.
+
+When testing, the system activates the webcam and compares faces captured live to the saved encodings to recognize people in real time.
 
 ## Features 
 
@@ -21,24 +23,6 @@ This project uses the face_recognition library to recognize faces in real time u
   - The webcam is then activated for **live testing**, comparing faces in real time with the known dataset.
 
 
-## Project Structure
-.
-
-├── faces_dataset/            # Contains user photo folders
-
-├── encodings/                # Stores mean encoding .npy files
-
-├── app_images/               # Backgrounds and assets for GUI
-
-├── gui/                      # GUI-related modules
-
-├── core/                     # Core logic 
-
-├── main.py                   # Entry point
-
-├── requirements.txt
-
-└── README.md
 
 ## Technologies Used 
 - Python 3.x
