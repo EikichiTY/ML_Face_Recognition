@@ -8,7 +8,7 @@ class ManageDataApp:
         self.root.geometry("700x400+500+100")
         self.root.resizable(False, False)
 
-        # Charger l'image
+        # Add Background
         image = Image.open("app_images/background_main.jpg") 
         image = image.resize((700, 400))  
         self.bg = ImageTk.PhotoImage(image) 

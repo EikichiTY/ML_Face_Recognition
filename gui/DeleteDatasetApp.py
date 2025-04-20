@@ -106,8 +106,4 @@ class DeleteDatasetApp:
         new_root.mainloop()
 
 
-# Test
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = DeleteDatasetApp(root)
-    root.mainloop()
+

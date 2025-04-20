@@ -8,14 +8,14 @@ class FaceTrainer:
         self.save_dir = save_dir
         os.makedirs(self.save_dir, exist_ok=True)
 
-    def train_all(self):   #train all the database found int faces_dataset
+    def train_all(self):   #train all the database found in faces_dataset
 
         for file in os.listdir(self.save_dir):
             if file.endswith(".npy"):
                 file_path = os.path.join(self.save_dir, file)
                 os.remove(file_path)
                 print(f"Deleted old encoding: {file}")
-                
+
         labels = [d for d in os.listdir(self.dataset_dir)
                   if os.path.isdir(os.path.join(self.dataset_dir, d))]
 
@@ -64,6 +64,3 @@ class FaceTrainer:
     def load_all_encodings(self, label):
         return np.load(os.path.join(self.save_dir, f"{label}_encodings.npy"), allow_pickle=True)
 
-# Test
-if __name__ == "__main__":
-    FaceTrainer().train_all()

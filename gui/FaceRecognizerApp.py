@@ -14,7 +14,7 @@ class FaceRecognizerApp:
         self.root.geometry("800x600+500+100")
         self.root.resizable(False, False)
 
-
+        # Add Background
         image = Image.open("app_images/background.png") 
         image = image.resize((800, 600))  
         self.bg = ImageTk.PhotoImage(image) 
