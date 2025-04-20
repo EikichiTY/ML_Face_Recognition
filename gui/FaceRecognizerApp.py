@@ -10,6 +10,10 @@ from threading import Thread
 class FaceRecognizerApp:
     def __init__(self, root, encodings_dir='encodings', tolerance=0.4):
         self.root = root
+        self.root.title("Face Recognition")
+        self.root.geometry("800x600+500+100")
+        self.root.resizable(False, False)
+
         self.encodings_dir = encodings_dir
         self.tolerance = tolerance
         self.known_encodings = []
@@ -108,8 +112,6 @@ class FaceRecognizerApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.title("Face Recognition App")
-    root.geometry("800x600")
     app = FaceRecognizerApp(root)
     Thread(target=app.start_recognition).start()
     root.mainloop()

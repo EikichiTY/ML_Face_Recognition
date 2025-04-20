@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 #from TestApp import TestApp  # You'll need to implement this class
+from threading import Thread
 
 class MainMenuApp:
     def __init__(self, root):
@@ -22,7 +23,7 @@ class MainMenuApp:
         title.pack(pady=40)
 
         # Test Recognition button
-        test_btn = tk.Button(root, text="Test Recognition", font=("Arial", 14), width=20) #, command=self.open_test)
+        test_btn = tk.Button(root, text="Test Recognition", font=("Arial", 14), width=20, command=self.open_test)
         test_btn.place(x= 100, y = 320 )
 
         # Manage Data button
@@ -41,5 +42,6 @@ class MainMenuApp:
         self.root.destroy()
         from gui.FaceRecognizerApp import FaceRecognizerApp
         new_root = tk.Tk()
-        FaceRecognizerApp(new_root)
+        app = FaceRecognizerApp(new_root)
+        Thread(target=app.start_recognition).start()
         new_root.mainloop()
