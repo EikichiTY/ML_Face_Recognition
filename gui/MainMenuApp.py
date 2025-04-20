@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-#from TestApp import TestApp  # You'll need to implement this class
 from threading import Thread
+from core.FaceTrainer import FaceTrainer
 
 class MainMenuApp:
     def __init__(self, root):
@@ -39,9 +39,33 @@ class MainMenuApp:
         new_root.mainloop()
 
     def open_test(self):
+        # Créer la fenêtre popup
+        popup = tk.Toplevel(self.root)
+        popup.geometry("300x100+700+300")
+        popup.title("Please wait")
+        popup.resizable(False, False)
+        popup.transient(self.root)
+        popup.grab_set()
+
+        label = tk.Label(popup, text="Training data, please wait...", font=("Arial", 12))
+        label.pack(pady=20)
+
+        # Lancer l'entraînement dans un thread, mais garder le contrôle UI dans le thread principal
+        def background_task():
+            data = FaceTrainer()
+            data.train_all()
+            self.root.after(100, lambda: self.finish_training(popup))  # revenir dans le thread principal
+
+        Thread(target=background_task).start()
+
+
+    def finish_training(self, popup):
+        popup.destroy()
         self.root.destroy()
+
         from gui.FaceRecognizerApp import FaceRecognizerApp
         new_root = tk.Tk()
         app = FaceRecognizerApp(new_root)
         Thread(target=app.start_recognition).start()
         new_root.mainloop()
+

@@ -10,6 +10,12 @@ class FaceTrainer:
 
     def train_all(self):   #train all the database found int faces_dataset
 
+        for file in os.listdir(self.save_dir):
+            if file.endswith(".npy"):
+                file_path = os.path.join(self.save_dir, file)
+                os.remove(file_path)
+                print(f"Deleted old encoding: {file}")
+                
         labels = [d for d in os.listdir(self.dataset_dir)
                   if os.path.isdir(os.path.join(self.dataset_dir, d))]
 
